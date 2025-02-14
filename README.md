@@ -3,7 +3,7 @@
 
 1. Venv
     ```sh
-    virtualenv .venv
+    python3.12 venv .venv
     ```
 
 2. Python requirements
@@ -11,8 +11,9 @@
     make install
     ```
 
-3. DB container start and migrate:
-    ```sh
+3. Settings and DB:  
+  - create .env
+ - ```sh
     make restart
     make migrate
     ```
