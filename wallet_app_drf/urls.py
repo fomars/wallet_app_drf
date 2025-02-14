@@ -22,10 +22,11 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.schemas import get_schema_view
 from rest_framework.schemas.openapi import SchemaGenerator
 
-from wallet_app.views import WalletViewSet
+from wallet_app.views import TransactionViewSet, WalletViewSet
 
 router = DefaultRouter()
 router.register(r"wallets", WalletViewSet)
+router.register(r"transactions", TransactionViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

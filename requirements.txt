@@ -11,3 +11,4 @@ djangorestframework-jsonapi[django-filter]
 djangorestframework-jsonapi[django-polymorphic]
 djangorestframework-jsonapi[openapi]
 pytest-cov
+faker

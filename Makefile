@@ -1,4 +1,4 @@
-.PHONY: install, restart, migrate, makemigrations, run, test, isort-check, isort-fix, black-check, black-fix
+.PHONY: install, restart, migrate, downgrade, makemigrations, run, test, isort-check, isort-fix, black-check, black-fix
 
 -include .env
 export
@@ -15,10 +15,10 @@ restart:
 	docker-compose down && docker-compose up -d
 
 migrate: venv
-	python manage.py migrate
+	python manage.py migrate wallet_app
 
 makemigrations: venv
-	python manage.py makemigrations
+	python manage.py makemigrations wallet_app
 
 create_admin: venv
 	python manage.py createsuperuser --username admin --email admin@example.com
@@ -27,7 +27,7 @@ run: venv
 	python manage.py runserver
 
 test: venv
-	python -m pytest --cov=wallet_app --cov=wallet_app_drf --cov-report=html -v -s
+	python -m pytest --cov=wallet_app --cov=wallet_app_drf --cov-report=term -v -s
 
 isort-check:
 	python -m isort -c . --skip .venv

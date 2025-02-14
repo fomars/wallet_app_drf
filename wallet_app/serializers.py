@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from wallet_app.models import Wallet
+from wallet_app.models import Transaction, Wallet
 
 
 class WalletSerializer(serializers.ModelSerializer):
@@ -15,3 +15,10 @@ class WalletSerializer(serializers.ModelSerializer):
                 {"balance": "Balance must be non-negative"}
             )
         return data
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ["id", "wallet", "txid", "amount", "created_at"]
+        read_only_fields = ["created_at"]
