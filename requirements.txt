@@ -6,3 +6,8 @@ django-filter
 pytest-django
 isort
 flake8
+djangorestframework-jsonapi
+djangorestframework-jsonapi[django-filter]
+djangorestframework-jsonapi[django-polymorphic]
+djangorestframework-jsonapi[openapi]
+pytest-cov

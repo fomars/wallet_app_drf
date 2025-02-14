@@ -30,8 +30,7 @@ class TestWalletViewSet:
         url = reverse("wallet-detail", args=[wallets[0].id])
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        resp_data = response.json()
-        assert (resp_data["id"], resp_data["label"]) == (
+        assert (response.data["id"], response.data["label"]) == (
             wallets[0].id,
             wallets[0].label,
         )
@@ -40,28 +39,28 @@ class TestWalletViewSet:
         url = reverse("wallet-detail", args=[wallets[0].id])
         response = api_client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
-        res = api_client.get(self.URL_LIST).json()
-        assert len(res) - len(wallets) == -1
+        resp = api_client.get(self.URL_LIST)
+        assert len(resp.data["results"]) - len(wallets) == -1
 
     def test_list_wallets(self, api_client, wallets):
         response = api_client.get(self.URL_LIST)
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 3
+        assert len(response.data["results"]) == 3
 
     def test_filter_by_balance(self, api_client, wallets):
         response = api_client.get(self.URL_LIST + "?balance__gt=150")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 2
+        assert len(response.data["results"]) == 2
 
     def test_filter_by_label(self, api_client, wallets):
         response = api_client.get(self.URL_LIST + "?label__icontains=wallet")
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 2
+        assert len(response.data["results"]) == 2
 
     def test_ordering(self, api_client, wallets):
         response = api_client.get(self.URL_LIST + "?ordering=-balance")
         assert response.status_code == status.HTTP_200_OK
-        assert Decimal(response.data[0]["balance"]) == Decimal("300.0")
+        assert Decimal(response.data["results"][0]["balance"]) == Decimal("300.0")
 
     @pytest.mark.parametrize(
         "label, balance, response_code",
@@ -72,17 +71,21 @@ class TestWalletViewSet:
         ],
     )
     def test_create_wallet(self, api_client, label, balance, response_code):
-        data = {"label": label, "balance": balance}
+        data = {
+            "data": {
+                "type": "Wallet",
+                "attributes": {"label": label, "balance": balance},
+            }
+        }
         response = api_client.post(self.URL_LIST, data)
         assert response.status_code == response_code
         # check created
-        response = api_client.get(self.URL_LIST)
-        result = response.json()
+        results = api_client.get(self.URL_LIST).data["results"]
         if balance >= 0:
-            assert len(result) > 0
-            assert (result[0]["label"], Decimal(result[0]["balance"])) == (
+            assert len(results) > 0
+            assert (results[0]["label"], Decimal(results[0]["balance"])) == (
                 label,
                 balance,
             )
         else:
-            assert len(result) == 0
+            assert len(results) == 0

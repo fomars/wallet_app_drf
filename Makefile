@@ -27,7 +27,7 @@ run: venv
 	python manage.py runserver
 
 test: venv
-	python -m pytest -v -s
+	python -m pytest --cov=wallet_app --cov=wallet_app_drf --cov-report=html -v -s
 
 isort-check:
 	python -m isort -c . --skip .venv
